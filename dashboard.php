@@ -8,7 +8,6 @@ if(!isset($_SESSION['usuario'])) {
 include 'conexion.php';
 $mensaje = "";
 
-// Eliminar paciente
 if(isset($_GET['eliminar'])) {
     $id = intval($_GET['eliminar']);
     $sql = "DELETE FROM pacientes WHERE id = $id";
@@ -19,7 +18,6 @@ if(isset($_GET['eliminar'])) {
     }
 }
 
-// Obtener datos para editar
 $paciente_editar = null;
 if(isset($_GET['editar'])) {
     $id = intval($_GET['editar']);
@@ -27,7 +25,7 @@ if(isset($_GET['editar'])) {
     $paciente_editar = $result->fetch_assoc();
 }
 
-// Insertar o actualizar paciente
+
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = trim($_POST['nombre']);
     $apellido = trim($_POST['apellido']);
@@ -65,7 +63,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mensaje = "<div class='alert alert-error'> Error al actualizar paciente</div>";
             }
         } else {
-            // Insertar nuevo
+            
             $sql = "INSERT INTO pacientes (nombre, apellido, edad, telefono, telefono_opcional, direccion, enfermedad, alergias, tipo_sangre, doctor_asignado) 
                     VALUES ('$nombre', '$apellido', $edad, '$telefono', " . ($telefono_opcional ? "'$telefono_opcional'" : "NULL") . ", '$direccion', '$enfermedad', " . ($alergias ? "'$alergias'" : "NULL") . ", '$tipo_sangre', '$doctor_asignado')";
             if($conexion->query($sql)) {
@@ -77,11 +75,11 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Obtener lista de pacientes actualizada
+
 $pacientes = $conexion->query("SELECT * FROM pacientes ORDER BY fecha_consulta DESC");
 $total_pacientes = $pacientes->num_rows;
 
-// Estadísticas
+
 $result_edad = $conexion->query("SELECT AVG(edad) as promedio FROM pacientes");
 $edad_promedio = $result_edad ? $result_edad->fetch_assoc()['promedio'] : 0;
 ?>
@@ -229,7 +227,7 @@ $edad_promedio = $result_edad ? $result_edad->fetch_assoc()['promedio'] : 0;
                     </thead>
                     <tbody>
                         <?php 
-                        // Reiniciar la consulta para obtener los datos
+                        
                         $pacientes_lista = $conexion->query("SELECT * FROM pacientes ORDER BY fecha_consulta DESC");
                         if($pacientes_lista && $pacientes_lista->num_rows > 0):
                         while($p = $pacientes_lista->fetch_assoc()): 
